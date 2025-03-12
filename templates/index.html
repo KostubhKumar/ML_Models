@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Weight Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        input {
+            width: 100%;
+            padding: 5px 0px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Fish Weight Predictor</h2>
+        <form id="prediction-form">
+            <input type="number" step="any" name="Length1" placeholder="Enter Length1" required>
+            <input type="number" step="any" name="Length2" placeholder="Enter Length2" required>
+            <input type="number" step="any" name="Length3" placeholder="Enter Length3" required>
+            <input type="number" step="any" name="Height" placeholder="Enter Height" required>
+            <input type="number" step="any" name="Width" placeholder="Enter Width" required>
+            <button type="submit">Predict</button>
+        </form>
+        <p id="result"></p>
+    </div>
+    
+    <script>
+        document.getElementById("prediction-form").onsubmit = async function(event) {
+            event.preventDefault();
+            
+            let formData = new FormData(event.target);
+            let data = new URLSearchParams(formData);
+            
+            let response = await fetch("/predict", {
+                method: "POST",
+                body: data
+            });
+            
+            let result = await response.json();
+            document.getElementById("result").innerText = result["Predicted Weight"] ? 
+                `Predicted Weight: ${result["Predicted Weight"].toFixed(2)} grams` : "Error: " + result["error"];
+        };
+    </script>
+</body>
+</html>
